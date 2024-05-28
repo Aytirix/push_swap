@@ -22,8 +22,12 @@ void	controller(int ac, char **av, t_info *info)
 		while (*av[i])
 		{
 			while (*av[i] && !ft_isdigit(*av[i]) && *av[i] != '-')
-				if (*av[i++] != ' ')
+			{
+				if (*av[i] != ' ' || (ac > 2 && *av[i]
+						&& !ft_isdigit(av[i][0])))
 					stop(info, 1);
+				av[i]++;
+			}
 			if (!*av[i])
 				break ;
 			check_exist(info, av, i);
@@ -34,23 +38,28 @@ void	controller(int ac, char **av, t_info *info)
 	}
 	info->temp = NULL;
 }
-
 void	check_exist(t_info *info, char **av, int i)
 {
 	t_list	*temp;
 
-	info->temp = (int *)malloc(sizeof(int));
+	info->temp = (int *)calloc(1, sizeof(int));
 	if (!info->temp)
 		stop(info, 1);
 	*(info->temp) = ft_atoi(av[i]);
-	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)) || (*(info->temp) == \
+	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)) || (*(info->temp) ==
 			-1 && ft_strncmp(av[i], "-1", 2)))
+	{
+		free(info->temp);
 		stop(info, 1);
+	}
 	temp = info->a;
 	while (temp && info->temp)
 	{
 		if (*(int *)temp->content == *info->temp)
+		{
+			free(info->temp);
 			stop(info, 1);
+		}
 		temp = temp->next;
 	}
 }
@@ -59,12 +68,12 @@ int	main(int ac, char **av)
 {
 	t_info	info;
 
-	if (ac == 1)
-		stop(&info, 0);
 	info.a = NULL;
 	info.b = NULL;
 	info.instruction = NULL;
 	info.temp = NULL;
+	if (ac == 1)
+		stop(&info, 0);
 	controller(ac, av, &info);
 	print_list(info.a, 'd');
 	stop(&info, 0);

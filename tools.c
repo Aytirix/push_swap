@@ -15,8 +15,7 @@
 void	stop(t_info *info, int error)
 {
 	if (error)
-		ft_printf("Error\n");
-	free(info->temp);
+		write(2, "Error\n", 6);
 	ft_lstclear(&info->a, free);
 	ft_lstclear(&info->b, free);
 	ft_lstclear(&info->instruction, free);
