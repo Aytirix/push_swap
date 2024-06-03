@@ -22,6 +22,7 @@
 typedef struct s_list
 {
 	void			*content;
+	void			*index;
 	struct s_list	*next;
 }	t_list;
 
@@ -68,6 +69,8 @@ void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
+t_list	*ft_lstdup_s(t_list *a);
+t_list	*ft_lstdup_d(t_list *a);
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
@@ -87,4 +90,8 @@ int		ft_printf(const char *str, ...);
 int		ft_putnbr_base_fd(long long nb, char *base, int fd);
 int		ft_putunbr_base_fd(unsigned long long nb, char *base, int fd);
 int		ft_putaddress(unsigned long long address, int fd);
+
+// Math functions
+int	ft_power(int nb, int power);
+
 #endif

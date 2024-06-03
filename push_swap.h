@@ -28,7 +28,14 @@ typedef struct s_info
 	int		*temp;
 }			t_info;
 
-// push_swap
+// Algo1
+void		algo(t_info *info);
+void		algo3(t_info *info);
+
+// AlgoTurk
+void	turkAlgorithm(t_info *info);
+
+// controller
 void		controller(int ac, char **av, t_info *info);
 void		check_exist(t_info *info, char **av, int i);
 
@@ -50,8 +57,15 @@ int			rrb(t_info *info, int add_instruction);
 int			rrr(t_info *info, int add_instruction);
 void		new_instruction(t_info *info, char *instruction);
 
+// Checker
+int			execute_instruction(t_info *info, int instruction,
+				int (**ins)(t_info *info, int instruction), int len);
+int			check_sorted(t_list *list);
+
 // tools
 void		stop(t_info *info, int error);
 void		print_list(t_list *list, char format);
+t_info		dup_info(t_info *info, int dup_instruction);
+void		free_info(t_info *info);
 
 #endif

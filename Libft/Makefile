@@ -5,6 +5,7 @@ SRC = 	chain_list/ft_lstadd_back.c \
 		chain_list/ft_lstadd_front.c \
 		chain_list/ft_lstclear.c \
 		chain_list/ft_lstdelone.c \
+		chain_list/ft_lstdup.c \
 		chain_list/ft_lstiter.c \
 		chain_list/ft_lstlast.c \
 		chain_list/ft_lstmap.c \
@@ -50,6 +51,7 @@ SRC = 	chain_list/ft_lstadd_back.c \
 		string/ft_strrchr.c \
 		string/ft_strtrim.c \
 		string/ft_substr.c \
+		math/ft_power.c \
 
 OBJ = $(SRC:.c=.o)
 

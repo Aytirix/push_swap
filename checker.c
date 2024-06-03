@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thmouty <thmouty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,27 +12,29 @@
 
 #include "push_swap.h"
 
-int	main(int ac, char **av)
+int	execute_instruction(t_info *info, int instruction, int (**ins)(t_info *info,
+			int instruction), int len)
 {
-	t_info	info;
+	int	i;
+	int	result;
 
-	info.a = NULL;
-	info.b = NULL;
-	info.instruction = NULL;
-	info.temp = NULL;
-	if (ac == 1)
-		stop(&info, 0);
-	controller(ac, av, &info);
-	printf("\nmain");
-	printf("\nList A:\n");
-	print_list(info.a, 'd');
-	algo(&info);
-	printf("\nInstruction %d:\n", ft_lstsize(info.instruction));
-	print_list(info.instruction, 's');
-	printf("\nList A trier:\n");
-	print_list(info.a, 'd');
-	printf("\nList B:\n");
-	print_list(info.b, 'd');
-	stop(&info, 0);
-	return (0);
+	i = 0;
+	result = 0;
+	while (i < len)
+		result += ins[i++](info, instruction);
+	return (result);
+}
+
+int	check_sorted(t_list *list)
+{
+	t_list	*temp;
+
+	temp = list;
+	while (temp->next)
+	{
+		if (*(int *)temp->content > *(int *)temp->next->content)
+			return (0);
+		temp = temp->next;
+	}
+	return (1);
 }

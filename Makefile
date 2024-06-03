@@ -3,11 +3,15 @@ SRC = push_swap.c \
 		instruction/instruction1.c \
 		instruction/instruction2.c \
 		instruction/instruction3.c \
+		controller.c \
+		checker.c \
+		algo/algo1.c \
+		algo/algoTurk.c \
 		tools.c
 OBJ = $(SRC:.c=.o)
 LIBFT = Libft
 LIBFT_A = $(LIBFT)/libft.a
-FLAGS = -Wall -Wextra -Werror -fdiagnostics-color=always #-fsanitize=address -g3
+FLAGS = -Wall -Wextra -Werror -fdiagnostics-color=always -fsanitize=address -g3
 LIBS = -L$(LIBFT) -lft
 
 all: $(LIBFT_A) $(NAME)
