@@ -17,27 +17,32 @@ void	algo(t_info *info)
 	int	len;
 
 	len = ft_lstsize(info->a);
+	if (check_sorted(info->a))
+		return ;
 	if (len == 2
 		&& *(int *)info->a->content > *(int *)info->a->next->content)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){sa}, 1);
 	else if (len == 3)
-		algo3(info);
+		algo3(info, info->a);
 	else if (len > 3)
 	{
-		execute_instruction(info, 1, (int (*[])(t_info *, int)){pb, pb}, 2);
-		turkAlgorithm(info);
+		if (len == 5)
+			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb, pb}, 2);
+		else if (len == 4)
+			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb}, 1);
+		sort_stack(info);
 	}
 }
 
-void	algo3(t_info *info)
+void	algo3(t_info *info, t_list *list)
 {
 	int a;
 	int b;
 	int c;
 
-	a = *(int *)info->a->content;
-	b = *(int *)info->a->next->content;
-	c = *(int *)info->a->next->next->content;
+	a = *(int *)list->content;
+	b = *(int *)list->next->content;
+	c = *(int *)list->next->next->content;
 	if (a > b && b < c && a < c)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){sa}, 1);
 	else if (a > b && b > c)

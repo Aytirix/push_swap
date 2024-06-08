@@ -1,0 +1,6 @@
+**/*.swp
+packages.microsoft.gpg
+*.o
+*.a
+.vscode
+

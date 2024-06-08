@@ -26,14 +26,25 @@ typedef struct s_info
 	t_list	*b;
 	t_list	*instruction;
 	int		*temp;
+	int rotate_a;
+    int rotate_b;
+    int total;
 }			t_info;
 
 // Algo1
 void		algo(t_info *info);
-void		algo3(t_info *info);
+void		algo3(t_info *info, t_list *list);
 
 // AlgoTurk
-void	turkAlgorithm(t_info *info);
+t_list *get_max(t_list *lst);
+t_list *get_min(t_list *lst);
+int get_position(t_list *lst, t_list *node);
+void sort_stack(t_info *info);
+void calculate_cost(t_info *info, int position_a, int position_b);
+int find_insert_position(t_info *info, int value);
+
+
+void push_to_correct_position(t_info *info);
 
 // controller
 void		controller(int ac, char **av, t_info *info);

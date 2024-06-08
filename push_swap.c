@@ -26,7 +26,9 @@ int	main(int ac, char **av)
 	printf("\nmain");
 	printf("\nList A:\n");
 	print_list(info.a, 'd');
+	printf("\n\nTRAITEMENT\n\n");
 	algo(&info);
+	printf("\n\n FIN  TRAITEMENT\n\n");
 	printf("\nInstruction %d:\n", ft_lstsize(info.instruction));
 	print_list(info.instruction, 's');
 	printf("\nList A trier:\n");
