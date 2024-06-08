@@ -102,6 +102,8 @@ void	push_to_correct_position(t_info *info)
 {
 	int	i;
 
+	printf("Rotating A %d times\n", info->rotate_a);
+	printf("Rotating B %d times\n", info->rotate_b);
 	i = -1;
 	if (info->rotate_a < 0)
 		while (++i < -info->rotate_a)
@@ -109,7 +111,6 @@ void	push_to_correct_position(t_info *info)
 	else
 		while (++i < info->rotate_a)
 			ra(info, 1);
-	pb(info, 1);
 	i = -1;
 	if (info->rotate_b < 0)
 		while (++i < -info->rotate_b)
@@ -117,6 +118,7 @@ void	push_to_correct_position(t_info *info)
 	else
 		while (++i < info->rotate_b)
 			rb(info, 1);
+	pb(info, 1);
 }
 
 void	sort_stack(t_info *info)
@@ -126,12 +128,11 @@ void	sort_stack(t_info *info)
 	int		min_total;
 	int		value;
 	int		position;
-	int		value;
-	int		position;
 	t_list	*min;
 
 	printf("Initial state:\n");
 	print_list(info->a, 'd');
+	printf("List B: \n");
 	print_list(info->b, 'd');
 	while (ft_lstsize(info->a) > 3)
 	{
@@ -166,7 +167,4 @@ void	sort_stack(t_info *info)
 	min = get_min(info->a);
 	while (*(int *)(info->a->content) != *(int *)(min->content))
 		ra(info, 1);
-	printf("Final state:\n");
-	print_list(info->a, 'd');
-	print_list(info->b, 'd');
 }
