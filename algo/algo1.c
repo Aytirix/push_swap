@@ -24,20 +24,14 @@ void	algo(t_info *info)
 	else if (len == 3)
 		algo3(info, info->a);
 	if (len > 3)
-	{
-		if (len >= 5)
-			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb}, 1);
-		else
-			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb}, 1);
 		sort_stack(info);
-	}
 }
 
 void	algo3(t_info *info, t_list *list)
 {
-	int a;
-	int b;
-	int c;
+	int	a;
+	int	b;
+	int	c;
 
 	a = *(int *)list->content;
 	b = *(int *)list->next->content;

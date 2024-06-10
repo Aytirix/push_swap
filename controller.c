@@ -47,8 +47,8 @@ void	check_exist(t_info *info, char **av, int i)
 	if (!info->temp)
 		stop(info, 1);
 	*(info->temp) = ft_atoi(av[i]);
-	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)) || (*(info->temp) ==
-			-1 && ft_strncmp(av[i], "-1", 2)))
+	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)) || (*(info->temp)
+			== -1 && ft_strncmp(av[i], "-1", 2)))
 	{
 		free(info->temp);
 		stop(info, 1);

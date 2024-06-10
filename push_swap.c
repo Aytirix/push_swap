@@ -20,6 +20,7 @@ int	main(int ac, char **av)
 	info.b = NULL;
 	info.instruction = NULL;
 	info.temp = NULL;
+	info.max3 = NULL;
 	if (ac == 1)
 		stop(&info, 0);
 	controller(ac, av, &info);

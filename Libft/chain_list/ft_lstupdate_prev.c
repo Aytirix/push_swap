@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_lstupdate_prev.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thmouty <thmouty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,19 +12,15 @@
 
 #include "../libft.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lstupdate_prev(t_list **lst)
 {
-	t_list	*last;
+	t_list	*tmp;
 
-	if (!lst || !new)
-		return ;
-	new->next = NULL;
-	if (!*lst)
+	tmp = *lst;
+	while (tmp)
 	{
-		*lst = new;
-		return ;
+		if (tmp->next)
+			tmp->next->prev = tmp;
+		tmp = tmp->next;
 	}
-	last = ft_lstlast(*lst);
-	last->next = new;
-	new->prev = last;
 }

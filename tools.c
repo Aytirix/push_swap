@@ -61,4 +61,6 @@ void	free_info(t_info *info)
 	ft_lstclear(&info->a, free);
 	ft_lstclear(&info->b, free);
 	ft_lstclear(&info->instruction, free);
+	if (info->max3)
+		free(info->max3);
 }

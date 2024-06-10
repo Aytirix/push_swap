@@ -23,7 +23,8 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-}	t_list;
+	struct s_list	*prev;
+}					t_list;
 
 // String functions
 char	**ft_split(char const *s, char c);
@@ -77,6 +78,7 @@ t_list	*ft_lstnew(void *content);
 t_list	*ft_lstprev(t_list *lst);
 int		ft_lstsize(t_list *lst);
 void	ft_lstswap(t_list **a, t_list **b);
+void	ft_lstupdate_prev(t_list **lst);
 
 // Output functions
 int		ft_putchar_fd(char c, int fd);
@@ -91,6 +93,6 @@ int		ft_putunbr_base_fd(unsigned long long nb, char *base, int fd);
 int		ft_putaddress(unsigned long long address, int fd);
 
 // Math functions
-int	ft_power(int nb, int power);
+int		ft_power(int nb, int power);
 
 #endif
