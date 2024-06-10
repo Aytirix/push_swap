@@ -19,16 +19,15 @@ void	algo(t_info *info)
 	len = ft_lstsize(info->a);
 	if (check_sorted(info->a))
 		return ;
-	if (len >= 2 && (len != 3) && (len != 4)
-		&& *(int *)info->a->content > *(int *)info->a->next->content)
+	if (len == 2 && *(int *)info->a->content > *(int *)info->a->next->content)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){sa}, 1);
 	else if (len == 3)
 		algo3(info, info->a);
 	if (len > 3)
 	{
-		if (len == 5)
-			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb, pb}, 2);
-		else if (len == 4)
+		if (len >= 5)
+			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb}, 1);
+		else
 			execute_instruction(info, 1, (int (*[])(t_info *, int)){pb}, 1);
 		sort_stack(info);
 	}

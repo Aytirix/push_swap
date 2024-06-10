@@ -45,7 +45,7 @@ int	get_position(t_list *lst, t_list *node)
 	return (position);
 }
 
-void	calculate_cost(t_info *info, int position_a, int position_b)
+int	calculate_cost(t_info *info, int position_a, int position_b)
 {
 	int	size_a;
 	int	size_b;
@@ -61,22 +61,17 @@ void	calculate_cost(t_info *info, int position_a, int position_b)
 	else
 		info->rotate_b = position_b - size_b;
 	info->total = abs(info->rotate_a) + abs(info->rotate_b);
+	return (1);
 }
 
-int	find_insert_position(t_info *info, int value)
+int	find_insert_position(t_info *info, int value, int position, int best_pos)
 {
 	t_list	*current;
-	int		position;
 	int		min_total;
-	int		best_position;
 
 	current = info->b;
-	position = 0;
 	min_total = INT_MAX;
-	best_position = 0;
-	if (ft_lstsize(info->b) == 0)
-		return (0);
-	if (value > *(int *)(get_max(info->b)->content))
+	if (ft_lstsize(info->b) == 0 || value > *(int *)(get_max(info->b)->content))
 		return (0);
 	if (value < *(int *)(get_min(info->b)->content))
 		return (ft_lstsize(info->b) + 1);
@@ -85,17 +80,16 @@ int	find_insert_position(t_info *info, int value)
 		if (*(int *)(current->content) > value && (current->next == NULL
 				|| *(int *)(current->next->content) < value))
 		{
-			calculate_cost(info, 0, position + 1);
-			if (info->total < min_total)
+			if (calculate_cost(info, 0, position++) && info->total < min_total)
 			{
 				min_total = info->total;
-				best_position = position + 1;
+				best_pos = position + 1;
 			}
 		}
 		current = current->next;
 		position++;
 	}
-	return (best_position);
+	return (best_pos);
 }
 
 void	push_to_correct_position(t_info *info)
@@ -111,6 +105,7 @@ void	push_to_correct_position(t_info *info)
 	else
 		while (++i < info->rotate_a)
 			ra(info, 1);
+	pb(info, 1);
 	i = -1;
 	if (info->rotate_b < 0)
 		while (++i < -info->rotate_b)
@@ -118,7 +113,6 @@ void	push_to_correct_position(t_info *info)
 	else
 		while (++i < info->rotate_b)
 			rb(info, 1);
-	pb(info, 1);
 }
 
 void	sort_stack(t_info *info)
@@ -142,7 +136,7 @@ void	sort_stack(t_info *info)
 		while (current)
 		{
 			value = *(int *)(current->content);
-			position = find_insert_position(info, value);
+			position = find_insert_position(info, value, 0, 0);
 			calculate_cost(info, get_position(info->a, current), position);
 			if (info->total < min_total)
 			{
@@ -152,7 +146,7 @@ void	sort_stack(t_info *info)
 			current = current->next;
 		}
 		value = *(int *)(cheapest->content);
-		position = find_insert_position(info, value);
+		position = find_insert_position(info, value, 0, 0);
 		calculate_cost(info, get_position(info->a, cheapest), position);
 		printf("Pushing element %d to position %d\n", value, position);
 		push_to_correct_position(info);

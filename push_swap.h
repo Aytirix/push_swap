@@ -40,8 +40,8 @@ t_list *get_max(t_list *lst);
 t_list *get_min(t_list *lst);
 int get_position(t_list *lst, t_list *node);
 void sort_stack(t_info *info);
-void calculate_cost(t_info *info, int position_a, int position_b);
-int find_insert_position(t_info *info, int value);
+int calculate_cost(t_info *info, int position_a, int position_b);
+int find_insert_position(t_info *info, int value, int position, int best_pos);
 
 
 void push_to_correct_position(t_info *info);
