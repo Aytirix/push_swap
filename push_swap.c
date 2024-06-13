@@ -24,7 +24,7 @@ int	main(int ac, char **av)
 		stop(&info, 0);
 	controller(ac, av, &info);
 	algo(&info);
-	printf("Result %d\n", ft_lstsize(info.instruction));
+	printf("\n\nTotal Instructions : %d\n", ft_lstsize(info.instruction));
 	print_list(info.instruction, 's');
 	stop(&info, 0);
 	return (0);

@@ -35,7 +35,6 @@ typedef struct s_info
 typedef struct s_cost
 {
 	int		rot_common;
-	int		rot;
 	int		rota;
 	int		rotb;
 }			t_cost;
