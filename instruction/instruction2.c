@@ -24,6 +24,7 @@ int	ra(t_info *info, int add_instruction)
 		last = ft_lstlast(temp);
 		last->next = temp;
 		temp->next = NULL;
+		ft_lstupdate(&info->a);
 		if (add_instruction)
 			new_instruction(info, "ra");
 		return (1);
@@ -43,6 +44,7 @@ int	rb(t_info *info, int add_instruction)
 		last = ft_lstlast(temp);
 		last->next = temp;
 		temp->next = NULL;
+		ft_lstupdate(&info->b);
 		if (add_instruction)
 			new_instruction(info, "rb");
 		return (1);
@@ -76,6 +78,7 @@ int	rra(t_info *info, int add_instruction)
 		ft_lstprev(temp)->next = NULL;
 		info->a = last;
 		last->next = temp;
+		ft_lstupdate(&info->a);
 		if (add_instruction)
 			new_instruction(info, "rra");
 		return (1);
@@ -95,6 +98,7 @@ int	rrb(t_info *info, int add_instruction)
 		ft_lstprev(temp)->next = NULL;
 		info->b = last;
 		last->next = temp;
+		ft_lstupdate(&info->b);
 		if (add_instruction)
 			new_instruction(info, "rrb");
 		return (1);

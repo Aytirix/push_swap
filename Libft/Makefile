@@ -13,7 +13,7 @@ SRC = 	chain_list/ft_lstadd_back.c \
 		chain_list/ft_lstprev.c \
 		chain_list/ft_lstsize.c \
 		chain_list/ft_lstswap.c \
-		chain_list/ft_lstupdate_prev.c \
+		chain_list/ft_lstupdate.c \
 		character/ft_bzero.c \
 		character/ft_isalnum.c \
 		character/ft_isalpha.c \

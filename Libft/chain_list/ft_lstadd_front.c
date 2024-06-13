@@ -22,5 +22,7 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 			(*lst)->prev = new;
 		}
 		*lst = new;
+		new->prev = NULL;
+		ft_lstupdate(lst);
 	}
 }

@@ -24,7 +24,7 @@ void	algo(t_info *info)
 	else if (len == 3)
 		algo3(info, info->a);
 	if (len > 3)
-		sort_stack(info);
+		initialize_algo(info);
 }
 
 void	algo3(t_info *info, t_list *list)

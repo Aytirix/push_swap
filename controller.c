@@ -43,12 +43,11 @@ void	check_exist(t_info *info, char **av, int i)
 {
 	t_list	*temp;
 
-	info->temp = (int *)calloc(1, sizeof(int));
+	info->temp = (int *)ft_calloc(1, sizeof(int));
 	if (!info->temp)
 		stop(info, 1);
 	*(info->temp) = ft_atoi(av[i]);
-	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)) || (*(info->temp)
-			== -1 && ft_strncmp(av[i], "-1", 2)))
+	if ((*(info->temp) == 0 && ft_strncmp(av[i], "0", 1)))
 	{
 		free(info->temp);
 		stop(info, 1);

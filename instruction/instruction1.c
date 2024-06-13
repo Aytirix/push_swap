@@ -59,6 +59,7 @@ int	pa(t_info *info, int add_instruction)
 		temp = info->b;
 		info->b = info->b->next;
 		ft_lstadd_front(&(info->a), temp);
+		info_update(info);
 		if (add_instruction)
 			new_instruction(info, "pa");
 		return (1);
@@ -75,6 +76,7 @@ int	pb(t_info *info, int add_instruction)
 		temp = info->a;
 		info->a = info->a->next;
 		ft_lstadd_front(&(info->b), temp);
+		info_update(info);
 		if (add_instruction)
 			new_instruction(info, "pb");
 		return (1);

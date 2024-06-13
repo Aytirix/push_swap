@@ -21,6 +21,7 @@
 
 typedef struct s_list
 {
+	int				index;
 	void			*content;
 	struct s_list	*next;
 	struct s_list	*prev;
@@ -78,7 +79,7 @@ t_list	*ft_lstnew(void *content);
 t_list	*ft_lstprev(t_list *lst);
 int		ft_lstsize(t_list *lst);
 void	ft_lstswap(t_list **a, t_list **b);
-void	ft_lstupdate_prev(t_list **lst);
+void	ft_lstupdate(t_list **lst);
 
 // Output functions
 int		ft_putchar_fd(char c, int fd);

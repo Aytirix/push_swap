@@ -28,7 +28,10 @@ void	print_list(t_list *list, char format)
 	while (temp)
 	{
 		if (format == 'd')
+		{
+			ft_printf("Index: %d\n", temp->index);
 			ft_printf("%d\n", *(int *)temp->content);
+		}
 		else if (format == 's')
 			ft_printf("%s\n", (char *)temp->content);
 		temp = temp->next;
@@ -61,6 +64,12 @@ void	free_info(t_info *info)
 	ft_lstclear(&info->a, free);
 	ft_lstclear(&info->b, free);
 	ft_lstclear(&info->instruction, free);
-	if (info->max3)
-		free(info->max3);
+}
+
+void	info_update(t_info *info)
+{
+	info->len_a = ft_lstsize(info->a);
+	info->len_b = ft_lstsize(info->b);
+	ft_lstupdate(&info->a);
+	ft_lstupdate(&info->b);
 }

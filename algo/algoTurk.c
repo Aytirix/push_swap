@@ -1,191 +1,205 @@
 #include "../push_swap.h"
 #include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-t_list	*get_max(t_list *lst, int **ignore)
+static t_list	*get_max(t_list *lst)
 {
 	t_list	*max;
-	int		is_ignored;
-	int		i;
 
-	max = NULL;
+	max = lst;
 	while (lst)
 	{
-		is_ignored = 0;
-		i = 0;
-		while (i < 3 && ignore && ignore[i])
-		{
-			if (*(int *)(lst->content) == *ignore[i])
-			{
-				is_ignored = 1;
-				break ;
-			}
-			i++;
-		}
-		if (!is_ignored && (!max
-				|| *(int *)(lst->content) > *(int *)(max->content)))
+		if (max->content > lst->content)
 			max = lst;
 		lst = lst->next;
 	}
 	return (max);
 }
 
-int	get_position(t_list *lst, t_list *node)
+static t_list	*get_min(t_list *lst)
 {
-	int	position;
+	t_list	*min;
 
-	position = 0;
+	min = lst;
 	while (lst)
 	{
-		if (lst == node)
-			break ;
-		position++;
+		if (min->content < lst->content)
+			min = lst;
 		lst = lst->next;
 	}
-	return (position);
+	return (min);
 }
 
-int	find_insert_position(t_info *info, int value, int *rotation_direction,
-		int *rotation_count)
-{
-	t_list	*current;
-	int		index;
-	int		first_larger_index;
-	int		total_elements;
+/*
 
-	current = info->b;
-	index = 0;
-	first_larger_index = -1;
-	total_elements = ft_lstsize(info->b);
+	* Calcul le nombre de rotation nécéssaire pour mettre un nombre en premiere position
+ * retourne la quantité de rotation nécéssaire
+ * Il retourne une valeur positive si ra
+ * Il retourne une valeur négative si rra
+ */
+t_cost	*best_rotation_to_top(t_list *current, int size, int target_index)
+{
+	t_cost	*cost;
+
+	cost->rot_common = 0;
+	cost->rot = 0;
+	cost->rota = 0;
+	cost->rotb = 0;
+	if (size / 2 >= target_index)
+		cost->rot = target_index;
+	else
+		cost->rot = -1 * (size - target_index);
+	return (cost);
+}
+
+/*
+ * Retourne le nombre le plus proche inférieur à val
+ */
+static t_list	*find_closest_less(t_list *current, int val)
+{
+	t_list	*number;
+	int		content;
+
 	while (current)
 	{
-		if (*(int *)current->content > value && first_larger_index == -1)
-			first_larger_index = index;
+		content = *(int *)current->content;
+		if (content < val && content > *(int *)number->content)
+		{
+			printf("Content %d\n", *(int *)current->content);
+			number = current;
+			printf("Number %d\n", *(int *)number->content);
+		}
 		current = current->next;
-		index++;
 	}
-	if (first_larger_index != -1)
+	return (number);
+}
+
+static void	calcul_place_in_b(t_info *info, int val, t_cost *cost)
+{
+	t_list	*number;
+
+	number = get_max(info->b);
+	if (val > *(int *)number->content)
 	{
-		*rotation_direction = -1;
-		*rotation_count = total_elements - first_larger_index - 1;
+		cost->rotb = best_rotation_to_top(info->b, info->len_b,
+				number->index)->rot;
+		return ;
 	}
+	number = get_min(info->b);
+	if (val < *(int *)number->content)
+	{
+		cost->rotb = best_rotation_to_top(info->b, info->len_b,
+				number->index)->rot;
+		return ;
+	}
+	number = find_closest_less(info->b, val);
+	cost->rotb = best_rotation_to_top(info->b, info->len_b, number->index)->rot;
+}
+
+/*
+ * Execute les rotations nécéssaires dans la liste a et b
+ */
+void	execute_rotation(t_info *info, t_cost *cost)
+{
+	int	i;
+
+	i = -1;
+	if (cost->rot_common > 0)
+		while (++i < cost->rot_common)
+			rr(info, 1);
 	else
-	{
-		*rotation_direction = 0;
-		*rotation_count = 0;
-	}
-	return (first_larger_index);
-}
-
-void	apply_pre_insertion_rotations(t_info *info, int rotation_direction,
-		int rotation_count)
-{
-	printf("Rotation direction: %d\n", rotation_direction);
-	printf("Rotation count: %d\n", rotation_count);
-	while (rotation_count-- > 0)
-	{
-		if (rotation_direction == 1)
-			rb(info, 1);
-		else if (rotation_direction == -1)
-			rrb(info, 1);
-	}
-}
-
-void	reorganize_b(t_info *info)
-{
-	t_list	*max;
-	int		max_position;
-	int		size_b;
-
-	max = get_max(info->b, NULL);
-	max_position = get_position(info->b, max);
-	size_b = ft_lstsize(info->b);
-	if (max_position <= size_b / 2)
-	{
-		while (max_position > 0)
-		{
-			rb(info, 1);
-			max_position--;
-		}
-	}
-	else
-	{
-		max_position = size_b - max_position;
-		while (max_position > 0)
-		{
-			rrb(info, 1);
-			max_position--;
-		}
-	}
-}
-
-static int	is_one_of_the_largest(t_info *info, int value)
-{
-	t_list	*temp;
-
-	if (info->max3 == NULL)
-	{
-		info->max3 = ft_calloc(3, sizeof(int *));
-		info->max3[0] = (int *)(get_max(info->a, NULL)->content);
-		info->max3[1] = (int *)(get_max(info->a, info->max3)->content);
-		info->max3[2] = (int *)(get_max(info->a, info->max3)->content);
-	}
-	return (value == *(info->max3[0]) || value == *(info->max3[1])
-		|| value == *(info->max3[2]));
-}
-
-void	sort_stack(t_info *info)
-{
-	int	value;
-	int	position;
-	int	rotation_direction;
-	int	rotation_count;
-
-	while (ft_lstsize(info->a) > 3)
-	{
-		value = *(int *)(info->a->content);
-		if (is_one_of_the_largest(info, value))
+		while (++i < -cost->rot_common)
+			rrr(info, 1);
+	i = -1;
+	if (cost->rota > 0)
+		while (++i < cost->rota)
 			ra(info, 1);
-		else
-		{
-			pb(info, 1);
+	else
+		while (++i < -cost->rota)
+			rra(info, 1);
+	i = -1;
+	if (cost->rotb > 0)
+		while (++i < cost->rotb)
+			rb(info, 1);
+	else
+		while (++i < -cost->rotb)
+			rrb(info, 1);
+}
+
+/*
+ * Fusionne les rotations communes ra rb en rr ou rra rrb en rrr
+ */
+static void	calcul_fusion(t_info *info, t_cost *cost)
+{
+	while (cost->rota > 0 && cost->rotb > 0)
+	{
+		cost->rot_common++;
+		cost->rota--;
+		cost->rotb--;
+	}
+	while (cost->rota < 0 && cost->rotb < 0)
+	{
+		cost->rot_common--;
+		cost->rota++;
+		cost->rotb++;
+	}
+}
+
+static t_cost	*search_rentability(t_info *info)
+{
+	t_list	*current;
+	t_cost	*tmp;
+	t_cost	*best_cost;
+
+	current = info->a;
+	while (current)
+	{
+		tmp = best_rotation_to_top(info->a, info->len_a, current->index);
+		printf("tmp %d\n", *(int *)current->content);
+		calcul_place_in_b(info, *(int *)current->content, tmp);
+		printf("Cost %d %d %d %d\n", tmp->rot_common, tmp->rot, tmp->rota, tmp->rotb);
+		calcul_fusion(info, tmp);
+		if (tmp->rot_common + tmp->rota + tmp->rotb < best_cost->rot_common
+			+ best_cost->rota + best_cost->rotb)
+			best_cost = tmp;
+		if (tmp->rot_common + tmp->rota + tmp->rotb == 0)
 			break ;
-		}
+		current = current->next;
 	}
-	while (ft_lstsize(info->a) > 3)
-	{
-		value = *(int *)(info->a->content);
-		if (is_one_of_the_largest(info, value))
-		{
-			ra(info, 1);
-			continue ;
-		}
-		position = find_insert_position(info, value, &rotation_direction,
-				&rotation_count);
-		apply_pre_insertion_rotations(info, rotation_direction, rotation_count);
+	return (best_cost);
+}
+
+void	initialize_algo(t_info *info)
+{
+	t_cost	*cost;
+
+	printf("Start\n");
+	printf("List a\n");
+	print_list(info->a, 'd');
+	printf("List b\n\n\n");
+	info->min = *(int *)get_min(info->a)->content;
+	info->max = *(int *)get_max(info->a)->content;
+	if (*(int *)info->a->content != info->min
+		&& *(int *)info->a->content != info->max)
+		execute_instruction(info, 1, (int (*[])(t_info *, int)){pb, pb}, 2);
+	else
 		pb(info, 1);
-		printf("Inserted %d in B with position %d\n", value, position);
-		printf("list B:\n");
+
+	while (info->len_a > 3)
+	{
+		cost = search_rentability(info);
+		printf("Cost exe %d %d %d %d\n", cost->rot_common, cost->rot, cost->rota, cost->rotb);
+		execute_rotation(info, cost);
+		pb(info, 1);
+		printf("List b\n");
 		print_list(info->b, 'd');
 	}
-	printf("prev reorganize_b\n");
-	printf("list B:\n");
-	print_list(info->b, 'd');
-	reorganize_b(info);
-	printf("After reorganize_b\n");
-	printf("list B:\n");
-	print_list(info->b, 'd');
-	// Trier les trois derniers éléments dans A
 	algo3(info, info->a);
-	printf("Algo3 done\n");
-	printf("list A:\n");
+	ft_lstupdate(&info->a);
+	printf("\n\nEnd End End End End End\n\n");
+	printf("List a\n");
 	print_list(info->a, 'd');
-	// Rapatrier tous les éléments de B vers A en maintenant l'ordre
-	while (ft_lstsize(info->b) > 0)
-	{
-		pa(info, 1);
-	}
-	printf("After pa\n");
-	printf("list A:\n");
-	print_list(info->a, 'd');
+	printf("List b\n");
+	print_list(info->b, 'd');
 }
