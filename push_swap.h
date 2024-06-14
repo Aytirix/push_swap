@@ -43,7 +43,7 @@ typedef struct s_cost
 // Algo1
 void		algo(t_info *info);
 void		algo3(t_info *info, t_list *list);
-int			*get_3_max(t_info *info, t_list *lst);
+void		algo5(t_info *info);
 
 // AlgoTurk
 void		calcul_place_in(t_info *info, char stack, int val, t_cost *cost);

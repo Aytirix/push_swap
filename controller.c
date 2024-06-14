@@ -12,28 +12,30 @@
 
 #include "../push_swap.h"
 
-void	controller(int ac, char **av, t_info *info)
+void	controller(int ac, char **v, t_info *info)
 {
 	int	i;
 
 	i = 0;
 	while (++i < ac)
 	{
-		while (*av[i])
+		while (*v[i])
 		{
-			while (*av[i] && !ft_isdigit(*av[i]) && *av[i] != '-')
+			while (*v[i] && !ft_isdigit(*v[i]) && *v[i] != '-')
 			{
-				if (*av[i] != ' ' || (ac > 2 && *av[i]
-						&& !ft_isdigit(av[i][0])))
+				if (*v[i] != ' ' || (ac > 2 && *v[i] && !ft_isdigit(v[i][0])))
 					stop(info, 1);
-				av[i]++;
+				v[i]++;
 			}
-			if (!*av[i])
+			if (!*v[i])
 				break ;
-			check_exist(info, av, i);
-			ft_lstadd_back(&info->a, ft_lstnew(info->temp));
-			while (*av[i] && (ft_isdigit(*av[i]) || *av[i] == '-'))
-				av[i]++;
+			check_exist(info, v, i);
+			while (*v[i] && (ft_isdigit(*v[i]) || *v[i] == '-'))
+			{
+				if (*v[i] == '-' && !ft_isdigit(v[i][1]))
+					stop(info, 1);
+				v[i]++;
+			}
 		}
 	}
 	info->temp = NULL;
@@ -62,4 +64,5 @@ void	check_exist(t_info *info, char **av, int i)
 		}
 		temp = temp->next;
 	}
+	ft_lstadd_back(&info->a, ft_lstnew(info->temp));
 }
