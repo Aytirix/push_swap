@@ -1,32 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   ft_abs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thmouty <thmouty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 19:14:49 by thmouty           #+#    #+#             */
-/*   Updated: 2024/05/15 04:05:20 by thmouty          ###   ########.fr       */
+/*   Created: 2024/02/27 15:51:36 by thmouty           #+#    #+#             */
+/*   Updated: 2024/02/27 15:51:36 by thmouty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
-
-int	main(int ac, char **av)
+int	ft_abs(int n)
 {
-	t_info	info;
-
-	int i = 5;
-	info.a = NULL;
-	info.b = NULL;
-	info.instruction = NULL;
-	info.temp = NULL;	
-	if (ac == 1)
-		stop(&info, 0);
-	controller(ac, av, &info);
-	info_update(&info);
-	algo(&info);
-	print_list(info.instruction, 's');
-	stop(&info, 0);
-	return (0);
+	if (n < 0)
+		return (-n);
+	return (n);
 }

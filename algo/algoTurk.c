@@ -10,7 +10,7 @@ static t_list	*get_max(t_list *lst)
 	max = lst;
 	while (lst)
 	{
-		if (max->content > lst->content)
+		if (*(int *)lst->content > *(int *)max->content)
 			max = lst;
 		lst = lst->next;
 	}
@@ -24,7 +24,7 @@ static t_list	*get_min(t_list *lst)
 	min = lst;
 	while (lst)
 	{
-		if (min->content < lst->content)
+		if (*(int *)lst->content < *(int *)min->content)
 			min = lst;
 		lst = lst->next;
 	}
@@ -69,8 +69,28 @@ static t_list	*find_closest_less(t_list *current, int val)
 	while (current)
 	{
 		content = *(int *)current->content;
-		if (content < val || (number != NULL
-				&& content > *(int *)number->content))
+		if (content < val && (number == NULL
+				|| content > *(int *)number->content))
+			number = current;
+		current = current->next;
+	}
+	return (number);
+}
+
+/*
+ * Retourne le nombre le plus proche supérieur à val
+ */
+static t_list	*find_closest_greater(t_list *current, int val)
+{
+	t_list	*number;
+	int		content;
+
+	number = NULL;
+	while (current)
+	{
+		content = *(int *)current->content;
+		if (content > val && (number == NULL
+				|| content < *(int *)number->content))
 			number = current;
 		current = current->next;
 	}
@@ -84,15 +104,8 @@ static void	calcul_place_in_b(t_info *info, int val, t_cost *cost)
 
 	nmax = get_max(info->b);
 	nmin = get_min(info->b);
-	if (val > *(int *)nmax->content || val < *(int *)nmin->content)
-		best_rotation_to_top(info, cost, 'b', nmax->index);
-	else
-	{
-		printf("info->b\n");
-		print_list(info->b, 'd');
-		printf("val %d\n", val);
+	if (val < *(int *)nmax->content && val > *(int *)nmin->content)
 		nmax = find_closest_less(info->b, val);
-	}
 	best_rotation_to_top(info, cost, 'b', nmax->index);
 }
 
@@ -156,16 +169,20 @@ static t_cost	*search_rentability(t_info *info)
 	best_cost = ft_calloc(sizeof(t_cost), 1);
 	if (!best_cost || !tmp)
 		stop(info, 1);
-	best_cost->rot_common = INT_MAX;
-	best_cost->rota = INT_MAX;
-	best_cost->rotb = INT_MAX;
+	best_cost->rot_common = info->len_a + info->len_b;
+	best_cost->rota = info->len_a + info->len_b;
+	best_cost->rotb = info->len_a + info->len_b;
 	while (current)
 	{
-		best_rotation_to_top(info, tmp, 'b', current->index);
+		tmp->rot_common = 0;
+		tmp->rota = 0;
+		tmp->rotb = 0;
+		best_rotation_to_top(info, tmp, 'a', current->index);
 		calcul_place_in_b(info, *(int *)current->content, tmp);
 		calcul_fusion(info, tmp);
-		if (tmp->rot_common + tmp->rota + tmp->rotb < best_cost->rot_common
-			+ best_cost->rota + best_cost->rotb)
+		if (ft_abs(tmp->rot_common) + ft_abs(tmp->rota) + ft_abs(tmp->rotb)
+			< ft_abs(best_cost->rot_common) + ft_abs(best_cost->rota)
+			+ ft_abs(best_cost->rotb))
 		{
 			best_cost->rot_common = tmp->rot_common;
 			best_cost->rota = tmp->rota;
@@ -178,12 +195,8 @@ static t_cost	*search_rentability(t_info *info)
 
 void	initialize_algo(t_info *info)
 {
-	t_cost	*cost;
+	t_cost *cost;
 
-	printf("Start\n");
-	printf("List a\n");
-	print_list(info->a, 'd');
-	printf("List b\n\n\n");
 	info->min = *(int *)get_min(info->a)->content;
 	info->max = *(int *)get_max(info->a)->content;
 	if (*(int *)info->a->content != info->min
@@ -194,18 +207,21 @@ void	initialize_algo(t_info *info)
 	while (info->len_a > 3)
 	{
 		cost = search_rentability(info);
-		printf("Cost exe %d %d %d\n", cost->rot_common, cost->rota, cost->rotb);
 		execute_rotation(info, cost);
 		free(cost);
 		pb(info, 1);
-		printf("List b\n");
-		print_list(info->b, 'd');
 	}
 	algo3(info, info->a);
-	ft_lstupdate(&info->a);
-	printf("\n\nEnd End End End End End\n\n");
-	printf("List a\n");
-	print_list(info->a, 'd');
-	printf("List b\n");
-	print_list(info->b, 'd');
+
+	// remettre le plus petit nombre de b en haut de la pile
+	// t_list *min = get_max(info->b);
+	// cost = ft_calloc(sizeof(t_cost), 1);
+	// cost->rot_common = 0;
+	// cost->rota = 0;
+	// cost->rotb = 0;
+	// best_rotation_to_top(info, cost, 'b', min->index);
+	// execute_rotation(info, cost);
+	// free(cost);
+	while (info->b)
+		pa(info, 1);
 }

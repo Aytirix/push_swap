@@ -24,7 +24,10 @@ void	algo(t_info *info)
 	else if (len == 3)
 		algo3(info, info->a);
 	if (len > 3)
+	{
+		info->max3 = get_3_max(info->a);
 		initialize_algo(info);
+	}
 }
 
 void	algo3(t_info *info, t_list *list)
@@ -46,4 +49,33 @@ void	algo3(t_info *info, t_list *list)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){rra}, 1);
 	else if (a < b && b > c && a < c)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){sa, ra}, 2);
+}
+
+int	*get_3_max(t_list *lst)
+{
+	int	*max;
+	int	*max2;
+	int	*max3;
+
+	max = NULL;
+	max2 = NULL;
+	max3 = NULL;
+	while (lst)
+	{
+		if (max == NULL || *(int *)lst->content > *max)
+		{
+			max3 = max2;
+			max2 = max;
+			max = (int *)lst->content;
+		}
+		else if (max2 == NULL || *(int *)lst->content > *max2)
+		{
+			max3 = max2;
+			max2 = (int *)lst->content;
+		}
+		else if (max3 == NULL || *(int *)lst->content > *max3)
+			max3 = (int *)lst->content;
+		lst = lst->next;
+	}
+	return ((int[]){*max, *max2, *max3});
 }

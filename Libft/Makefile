@@ -53,6 +53,7 @@ SRC = 	chain_list/ft_lstadd_back.c \
 		string/ft_strtrim.c \
 		string/ft_substr.c \
 		math/ft_power.c \
+		math/ft_abs.c
 
 OBJ = $(SRC:.c=.o)
 

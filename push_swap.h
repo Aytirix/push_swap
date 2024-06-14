@@ -30,6 +30,7 @@ typedef struct s_info
     int		len_b;
 	int		min;
 	int		max;
+	int		*max3;
 }			t_info;
 
 typedef struct s_cost
@@ -42,6 +43,7 @@ typedef struct s_cost
 // Algo1
 void		algo(t_info *info);
 void		algo3(t_info *info, t_list *list);
+int			*get_3_max(t_list *lst);
 
 // AlgoTurk
 void		initialize_algo(t_info *info);

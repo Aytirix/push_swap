@@ -95,5 +95,6 @@ int		ft_putaddress(unsigned long long address, int fd);
 
 // Math functions
 int		ft_power(int nb, int power);
+int		ft_abs(int n);
 
 #endif
