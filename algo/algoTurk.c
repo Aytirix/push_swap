@@ -1,61 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   algoTurk.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thmouty <thmouty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/10 19:14:10 by thmouty           #+#    #+#             */
+/*   Updated: 2024/05/15 02:36:14 by thmouty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../push_swap.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-static t_list	*get_max(t_list *lst)
-{
-	t_list	*max;
-
-	max = lst;
-	while (lst)
-	{
-		if (*(int *)lst->content > *(int *)max->content)
-			max = lst;
-		lst = lst->next;
-	}
-	return (max);
-}
-
-static t_list	*get_min(t_list *lst)
-{
-	t_list	*min;
-
-	min = lst;
-	while (lst)
-	{
-		if (*(int *)lst->content < *(int *)min->content)
-			min = lst;
-		lst = lst->next;
-	}
-	return (min);
-}
-
-/*
-
-	* Calcul le nombre de rotation nécéssaire pour mettre un nombre en premiere position
- * retourne la quantité de rotation nécéssaire
- * Il retourne une valeur positive si ra
- * Il retourne une valeur négative si rra
- */
-static void	best_rotation_to_top(t_info *info, t_cost *cost, char stack,
-		int target_index)
-{
-	if (stack == 'a')
-	{
-		if (info->len_a / 2 >= target_index)
-			cost->rota = target_index;
-		else
-			cost->rota = -1 * (info->len_a - target_index);
-	}
-	else if (stack == 'b')
-	{
-		if (info->len_b / 2 >= target_index)
-			cost->rotb = target_index;
-		else
-			cost->rotb = -1 * (info->len_b - target_index);
-	}
-}
 
 /*
  * Retourne le nombre le plus proche inférieur à val
@@ -97,64 +55,26 @@ static t_list	*find_closest_greater(t_list *current, int val)
 	return (number);
 }
 
-static void	calcul_place_in_b(t_info *info, int val, t_cost *cost)
+static void	calcul_place_in(t_info *info, char stack, int val, t_cost *cost)
 {
 	t_list	*nmax;
 	t_list	*nmin;
 
-	nmax = get_max(info->b);
-	nmin = get_min(info->b);
-	if (val < *(int *)nmax->content && val > *(int *)nmin->content)
-		nmax = find_closest_less(info->b, val);
-	best_rotation_to_top(info, cost, 'b', nmax->index);
-}
-
-/*
- * Execute les rotations nécéssaires dans la liste a et b
- */
-void	execute_rotation(t_info *info, t_cost *cost)
-{
-	int	i;
-
-	i = -1;
-	if (cost->rot_common > 0)
-		while (++i < cost->rot_common)
-			rr(info, 1);
-	else
-		while (++i < -cost->rot_common)
-			rrr(info, 1);
-	i = -1;
-	if (cost->rota > 0)
-		while (++i < cost->rota)
-			ra(info, 1);
-	else
-		while (++i < -cost->rota)
-			rra(info, 1);
-	i = -1;
-	if (cost->rotb > 0)
-		while (++i < cost->rotb)
-			rb(info, 1);
-	else
-		while (++i < -cost->rotb)
-			rrb(info, 1);
-}
-
-/*
- * Fusionne les rotations communes ra rb en rr ou rra rrb en rrr
- */
-static void	calcul_fusion(t_info *info, t_cost *cost)
-{
-	while (cost->rota > 0 && cost->rotb > 0)
+	if (stack == 'a')
 	{
-		cost->rot_common++;
-		cost->rota--;
-		cost->rotb--;
+		nmax = get_max(info->a);
+		nmin = get_min(info->a);
+		if (val > *(int *)nmax->content && val < *(int *)nmin->content)
+			nmax = find_closest_less(info->a, val);
+		best_rotation_to_top(info, cost, 'a', nmax->index);
 	}
-	while (cost->rota < 0 && cost->rotb < 0)
+	else if (stack == 'b')
 	{
-		cost->rot_common--;
-		cost->rota++;
-		cost->rotb++;
+		nmax = get_max(info->b);
+		nmin = get_min(info->b);
+		if (val < *(int *)nmax->content && val > *(int *)nmin->content)
+			nmax = find_closest_less(info->b, val);
+		best_rotation_to_top(info, cost, 'b', nmax->index);
 	}
 }
 
@@ -178,11 +98,11 @@ static t_cost	*search_rentability(t_info *info)
 		tmp->rota = 0;
 		tmp->rotb = 0;
 		best_rotation_to_top(info, tmp, 'a', current->index);
-		calcul_place_in_b(info, *(int *)current->content, tmp);
+		calcul_place_in(info, 'b', *(int *)current->content, tmp);
 		calcul_fusion(info, tmp);
-		if (ft_abs(tmp->rot_common) + ft_abs(tmp->rota) + ft_abs(tmp->rotb)
-			< ft_abs(best_cost->rot_common) + ft_abs(best_cost->rota)
-			+ ft_abs(best_cost->rotb))
+		if (ft_abs(tmp->rot_common) + ft_abs(tmp->rota)
+			+ ft_abs(tmp->rotb) < ft_abs(best_cost->rot_common)
+			+ ft_abs(best_cost->rota) + ft_abs(best_cost->rotb))
 		{
 			best_cost->rot_common = tmp->rot_common;
 			best_cost->rota = tmp->rota;
@@ -195,7 +115,8 @@ static t_cost	*search_rentability(t_info *info)
 
 void	initialize_algo(t_info *info)
 {
-	t_cost *cost;
+	t_cost	*cost;
+	t_list	*min_in_a;
 
 	info->min = *(int *)get_min(info->a)->content;
 	info->max = *(int *)get_max(info->a)->content;
@@ -204,24 +125,18 @@ void	initialize_algo(t_info *info)
 		execute_instruction(info, 1, (int (*[])(t_info *, int)){pb, pb}, 2);
 	else
 		pb(info, 1);
-	while (info->len_a > 3)
+	while (info->len_a > 0)
 	{
 		cost = search_rentability(info);
 		execute_rotation(info, cost);
 		free(cost);
 		pb(info, 1);
 	}
-	algo3(info, info->a);
-
-	// remettre le plus petit nombre de b en haut de la pile
-	// t_list *min = get_max(info->b);
-	// cost = ft_calloc(sizeof(t_cost), 1);
-	// cost->rot_common = 0;
-	// cost->rota = 0;
-	// cost->rotb = 0;
-	// best_rotation_to_top(info, cost, 'b', min->index);
-	// execute_rotation(info, cost);
-	// free(cost);
 	while (info->b)
 		pa(info, 1);
+	cost = ft_calloc(sizeof(t_cost), 1);
+	min_in_a = get_min(info->a);
+	best_rotation_to_top(info, cost, 'a', min_in_a->index);
+	execute_rotation(info, cost);
+	free(cost);
 }

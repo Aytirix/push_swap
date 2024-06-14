@@ -15,12 +15,13 @@
 int	main(int ac, char **av)
 {
 	t_info	info;
+	int		i;
 
-	int i = 5;
+	i = 5;
 	info.a = NULL;
 	info.b = NULL;
 	info.instruction = NULL;
-	info.temp = NULL;	
+	info.temp = NULL;
 	if (ac == 1)
 		stop(&info, 0);
 	controller(ac, av, &info);

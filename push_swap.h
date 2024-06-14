@@ -26,8 +26,8 @@ typedef struct s_info
 	t_list	*b;
 	t_list	*instruction;
 	int		*temp;
-    int		len_a;
-    int		len_b;
+	int		len_a;
+	int		len_b;
 	int		min;
 	int		max;
 	int		*max3;
@@ -43,10 +43,18 @@ typedef struct s_cost
 // Algo1
 void		algo(t_info *info);
 void		algo3(t_info *info, t_list *list);
-int			*get_3_max(t_list *lst);
+int			*get_3_max(t_info *info, t_list *lst);
 
 // AlgoTurk
 void		initialize_algo(t_info *info);
+
+// AlgoTurk_Utils
+t_list		*get_max(t_list *lst);
+t_list		*get_min(t_list *lst);
+void		best_rotation_to_top(t_info *info, t_cost *cost, char stack,
+				int target_index);
+void		execute_rotation(t_info *info, t_cost *cost);
+void		calcul_fusion(t_info *info, t_cost *cost);
 
 // controller
 void		controller(int ac, char **av, t_info *info);

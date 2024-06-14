@@ -7,6 +7,7 @@ SRC = push_swap.c \
 		checker.c \
 		algo/algo1.c \
 		algo/algoTurk.c \
+		algo/algoTurk_Utils.c \
 		tools.c
 OBJ = $(SRC:.c=.o)
 LIBFT = Libft
