@@ -101,7 +101,7 @@ void	execute_rotation(t_info *info, t_cost *cost)
 /*
  * Fusionne les rotations communes ra rb en rr ou rra rrb en rrr
  */
-void	calcul_fusion(t_info *info, t_cost *cost)
+void	calcul_fusion(t_cost *cost)
 {
 	while (cost->rota > 0 && cost->rotb > 0)
 	{

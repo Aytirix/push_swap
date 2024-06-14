@@ -38,27 +38,6 @@ void	print_list(t_list *list, char format)
 	}
 }
 
-t_info	dup_info(t_info *info, int dup_instruction)
-{
-	t_info	pinfo;
-
-	pinfo.instruction = NULL;
-	pinfo.temp = NULL;
-	pinfo.a = ft_lstdup_d(info->a);
-	if (!pinfo.a)
-		stop(info, 1);
-	pinfo.b = ft_lstdup_d(info->b);
-	if (!pinfo.b)
-		stop(info, 1);
-	if (dup_instruction)
-	{
-		pinfo.instruction = ft_lstdup_s(info->instruction);
-		if (!pinfo.instruction)
-			stop(info, 1);
-	}
-	return (pinfo);
-}
-
 void	free_info(t_info *info)
 {
 	ft_lstclear(&info->a, free);

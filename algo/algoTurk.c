@@ -35,27 +35,7 @@ static t_list	*find_closest_less(t_list *current, int val)
 	return (number);
 }
 
-/*
- * Retourne le nombre le plus proche supérieur à val
- */
-static t_list	*find_closest_greater(t_list *current, int val)
-{
-	t_list	*number;
-	int		content;
-
-	number = NULL;
-	while (current)
-	{
-		content = *(int *)current->content;
-		if (content > val && (number == NULL
-				|| content < *(int *)number->content))
-			number = current;
-		current = current->next;
-	}
-	return (number);
-}
-
-static void	calcul_place_in(t_info *info, char stack, int val, t_cost *cost)
+void	calcul_place_in(t_info *info, char stack, int val, t_cost *cost)
 {
 	t_list	*nmax;
 	t_list	*nmin;
@@ -78,6 +58,23 @@ static void	calcul_place_in(t_info *info, char stack, int val, t_cost *cost)
 	}
 }
 
+static void	update_costs(t_info *info, t_cost *tmp, t_cost *best_cost,
+		t_list *current)
+{
+	tmp->rot_common = 0;
+	tmp->rota = 0;
+	tmp->rotb = 0;
+	best_rotation_to_top(info, tmp, 'a', current->index);
+	calcul_place_in(info, 'b', *(int *)current->content, tmp);
+	calcul_fusion(tmp);
+	if (ft_abs(tmp->rot_common) + ft_abs(tmp->rota)
+		+ ft_abs(tmp->rotb) < ft_abs(best_cost->rot_common)
+		+ ft_abs(best_cost->rota) + ft_abs(best_cost->rotb))
+	{
+		*best_cost = *tmp;
+	}
+}
+
 static t_cost	*search_rentability(t_info *info)
 {
 	t_list	*current;
@@ -94,23 +91,11 @@ static t_cost	*search_rentability(t_info *info)
 	best_cost->rotb = info->len_a + info->len_b;
 	while (current)
 	{
-		tmp->rot_common = 0;
-		tmp->rota = 0;
-		tmp->rotb = 0;
-		best_rotation_to_top(info, tmp, 'a', current->index);
-		calcul_place_in(info, 'b', *(int *)current->content, tmp);
-		calcul_fusion(info, tmp);
-		if (ft_abs(tmp->rot_common) + ft_abs(tmp->rota)
-			+ ft_abs(tmp->rotb) < ft_abs(best_cost->rot_common)
-			+ ft_abs(best_cost->rota) + ft_abs(best_cost->rotb))
-		{
-			best_cost->rot_common = tmp->rot_common;
-			best_cost->rota = tmp->rota;
-			best_cost->rotb = tmp->rotb;
-		}
+		update_costs(info, tmp, best_cost, current);
 		current = current->next;
 	}
-	return (free(tmp), best_cost);
+	free(tmp);
+	return (best_cost);
 }
 
 void	initialize_algo(t_info *info)

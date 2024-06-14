@@ -15,9 +15,7 @@
 int	main(int ac, char **av)
 {
 	t_info	info;
-	int		i;
 
-	i = 5;
 	info.a = NULL;
 	info.b = NULL;
 	info.instruction = NULL;

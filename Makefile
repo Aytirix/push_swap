@@ -12,7 +12,7 @@ SRC = push_swap.c \
 OBJ = $(SRC:.c=.o)
 LIBFT = Libft
 LIBFT_A = $(LIBFT)/libft.a
-FLAGS = -fsanitize=address -fdiagnostics-color=always -g3 #-Wall -Wextra -Werror 
+FLAGS = -fsanitize=address -fdiagnostics-color=always -g3 -Wall -Wextra -Werror 
 LIBS = -L$(LIBFT) -lft
 
 all: $(LIBFT_A) $(NAME)
