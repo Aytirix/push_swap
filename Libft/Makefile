@@ -1,5 +1,5 @@
 NAME = libft.a
-CC= cc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 SRC = 	chain_list/ft_lstadd_back.c \
 		chain_list/ft_lstadd_front.c \
@@ -55,26 +55,27 @@ SRC = 	chain_list/ft_lstadd_back.c \
 		math/ft_power.c \
 		math/ft_abs.c
 
-OBJ = $(SRC:.c=.o)
+OBJDIR = objets
+OBJ = $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 
-# Règle principale
+.PHONY: all clean fclean re directories
+
+all: directories $(NAME)
+
+directories:
+	@mkdir -p $(OBJDIR)/chain_list $(OBJDIR)/character $(OBJDIR)/conversion $(OBJDIR)/get_next_line $(OBJDIR)/memory $(OBJDIR)/output $(OBJDIR)/printf $(OBJDIR)/string $(OBJDIR)/math
+
 $(NAME): $(OBJ)
-	@echo "$(GREEN)Building $(NAME)...$(RESET)"
+	@echo "$(BLUE)Building $(NAME)...$(RESET)"
 	@ar rcs $(NAME) $(OBJ)
-	@echo "$(BLUE)$(NAME) built successfully!$(RESET)"
+	@echo "$(GREEN)$(NAME) built successfully!$(RESET)"
 
-# Pattern rule pour compiler les fichiers .c en .o
-# Pattern rule pour compiler les fichiers .c en .o sans afficher de messages
-%.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@ || (echo "$(RED)Compilation failed for $< $(RESET)"; exit 1)
-
-# Règles phony pour nettoyer le projet
-.PHONY: all clean fclean re
-
-all: $(NAME)
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@ || (echo "Compilation failed for $<"; exit 1)
 
 clean:
-	@rm -f $(OBJ)
+	@rm -rf $(OBJDIR)
 
 fclean: clean
 	@rm -f $(NAME)
