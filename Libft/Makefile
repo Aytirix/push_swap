@@ -57,20 +57,26 @@ SRC = 	chain_list/ft_lstadd_back.c \
 
 OBJ = $(SRC:.c=.o)
 
+# Règle principale
 $(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+	@echo "$(GREEN)Building $(NAME)...$(RESET)"
+	@ar rcs $(NAME) $(OBJ)
+	@echo "$(BLUE)$(NAME) built successfully!$(RESET)"
 
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
+# Pattern rule pour compiler les fichiers .c en .o
+# Pattern rule pour compiler les fichiers .c en .o sans afficher de messages
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@ || (echo "$(RED)Compilation failed for $< $(RESET)"; exit 1)
+
+# Règles phony pour nettoyer le projet
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
